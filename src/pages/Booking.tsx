@@ -47,6 +47,24 @@ const Booking = () => {
     },
   };
 
+  const renderStepIndicator = () => (
+    <div className="flex items-center justify-center gap-8 mb-12">
+      {[1, 2, 3, 4].map((s) => (
+        <div key={s} className="flex items-center">
+          <div
+            className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-medium transition-colors
+              ${s === step ? "bg-red-600 text-white" : s < step ? "bg-gray-100 text-gray-600" : "bg-gray-100 text-gray-400"}`}
+          >
+            {s}
+          </div>
+          {s < 4 && (
+            <div className={`w-24 h-0.5 mx-2 ${s < step ? "bg-red-600" : "bg-gray-200"}`} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
   const handleNext = () => {
     if (step === 1 && !pincode) {
       toast({
@@ -95,29 +113,11 @@ const Booking = () => {
     setStep(step + 1);
   };
 
-  const renderStepIndicator = () => (
-    <div className="flex items-center justify-center gap-4 mb-12">
-      {[1, 2, 3, 4].map((s) => (
-        <div key={s} className="flex items-center">
-          <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors
-              ${s === step ? "bg-red-600 text-white" : s < step ? "bg-gray-200 text-gray-600" : "bg-gray-100 text-gray-400"}`}
-          >
-            {s}
-          </div>
-          {s < 4 && (
-            <div className={`w-12 h-0.5 mx-1 ${s < step ? "bg-red-600" : "bg-gray-200"}`} />
-          )}
-        </div>
-      ))}
-    </div>
-  );
-
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {renderStepIndicator()}
 
           {step === 1 && (
@@ -214,39 +214,46 @@ const Booking = () => {
 
           {step === 3 && (
             <div className="space-y-8 animate-fadeIn">
-              <h2 className="text-3xl font-bold text-center mb-8">Pick a Date & Time</h2>
-              <div className="grid md:grid-cols-2 gap-8">
+              <h2 className="text-3xl font-bold text-center mb-12">Pick a Date & Time</h2>
+              <div className="grid md:grid-cols-2 gap-12">
                 <div className="space-y-4">
-                  <label className="text-lg font-medium flex items-center gap-2">
-                    <Calendar className="w-5 h-5" />
-                    Select a Date
-                  </label>
+                  <div className="flex items-center gap-2 mb-6">
+                    <h3 className="text-xl font-semibold">Select a Date</h3>
+                  </div>
                   <Calendar
                     mode="single"
                     selected={date}
                     onSelect={setDate}
-                    className="rounded-md border"
+                    className="rounded-lg border shadow-sm p-4"
                     disabled={(date) => date < new Date()}
+                    classNames={{
+                      day_selected: "bg-secondary text-secondary-foreground hover:bg-secondary hover:text-secondary-foreground",
+                      day_today: "bg-muted text-muted-foreground",
+                    }}
                   />
                 </div>
                 <div className="space-y-4">
-                  <label className="text-lg font-medium flex items-center gap-2">
+                  <div className="flex items-center gap-2 mb-6">
                     <Clock className="w-5 h-5" />
-                    Select a Time
-                  </label>
+                    <h3 className="text-xl font-semibold">Select a Time</h3>
+                  </div>
                   <Select value={time} onValueChange={setTime}>
-                    <SelectTrigger className="w-full h-14">
+                    <SelectTrigger className="w-full h-14 text-lg">
                       <SelectValue placeholder="Choose time slot" />
                     </SelectTrigger>
                     <SelectContent>
                       {["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"].map((t) => (
-                        <SelectItem key={t} value={t}>
+                        <SelectItem 
+                          key={t} 
+                          value={t}
+                          className="text-lg py-3 cursor-pointer hover:bg-secondary hover:text-secondary-foreground"
+                        >
                           {t}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                  <p className="text-sm text-gray-500 mt-2">
+                  <p className="text-sm text-gray-500 mt-4">
                     Express Wash approx 25 mins/45 mins peak
                   </p>
                 </div>
