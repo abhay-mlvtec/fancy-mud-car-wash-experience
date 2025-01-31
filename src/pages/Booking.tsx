@@ -9,6 +9,16 @@ import { MapPin, Navigation, Clock } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+interface Service {
+  price: number;
+  features: string[];
+  oldPrice?: number; // Make oldPrice optional
+}
+
+interface Services {
+  [key: string]: Service;
+}
+
 const Booking = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -20,6 +30,22 @@ const Booking = () => {
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState("");
   const [phone, setPhone] = useState("");
+
+  const services: Services = {
+    "Express Wash": { 
+      price: 30, 
+      features: ["High-pressure rinse", "Exterior wash", "Tyre shine"] 
+    },
+    "Platinum Wash": { 
+      price: 69, 
+      features: ["Express wash features", "Interior vacuum", "Window cleaning"] 
+    },
+    "Star Polish": { 
+      price: 79, 
+      oldPrice: 89, 
+      features: ["Platinum features", "Polish", "Wax protection"] 
+    },
+  };
 
   const handleNext = () => {
     if (step === 1 && !pincode) {
@@ -86,12 +112,6 @@ const Booking = () => {
       ))}
     </div>
   );
-
-  const services = {
-    "Express Wash": { price: 30, features: ["High-pressure rinse", "Exterior wash", "Tyre shine"] },
-    "Platinum Wash": { price: 69, features: ["Express wash features", "Interior vacuum", "Window cleaning"] },
-    "Star Polish": { price: 79, oldPrice: 89, features: ["Platinum features", "Polish", "Wax protection"] },
-  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
