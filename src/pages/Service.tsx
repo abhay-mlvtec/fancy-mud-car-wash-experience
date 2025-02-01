@@ -8,7 +8,7 @@ const services = {
     title: 'Premium Wash',
     description: 'Our premium wash service includes a thorough exterior cleaning, premium wax protection, and attention to every detail.',
     image: 'https://images.unsplash.com/photo-1520340356584-f9917d1eea6f',
-    price: '$29.99',
+    price: 'Rs 299.99',
     features: [
       'Hand wash and dry',
       'Wheel and tire cleaning',
@@ -21,7 +21,7 @@ const services = {
     title: 'Interior Detail',
     description: 'A comprehensive interior cleaning service that leaves your car\'s cabin fresh and spotless.',
     image: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785',
-    price: '$49.99',
+    price: 'Rs. 499.99',
     features: [
       'Vacuum all surfaces',
       'Steam clean upholstery',
@@ -34,7 +34,7 @@ const services = {
     title: 'Full Detail',
     description: 'The ultimate car care package combining our premium wash and interior detail services.',
     image: 'https://images.unsplash.com/photo-1605618313023-d3640b8c121f',
-    price: '$89.99',
+    price: 'Rs. 899.99',
     features: [
       'Premium wash service',
       'Interior detail service',

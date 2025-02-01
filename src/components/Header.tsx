@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { Link as ScrollLink } from 'react-scroll';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -27,9 +28,14 @@ const Header = () => {
             <Link to="/" className="text-primary hover:text-secondary transition-colors">
               Home
             </Link>
-            <Link to="/services" className="text-primary hover:text-secondary transition-colors">
+            <ScrollLink 
+              to="services" 
+              smooth={true} 
+              duration={500} 
+              className="text-primary hover:text-secondary transition-colors cursor-pointer"
+            >
               Services
-            </Link>
+            </ScrollLink>
             <Link to="/about" className="text-primary hover:text-secondary transition-colors">
               About
             </Link>
@@ -54,9 +60,14 @@ const Header = () => {
               <Link to="/" className="text-primary hover:text-secondary transition-colors">
                 Home
               </Link>
-              <Link to="/services" className="text-primary hover:text-secondary transition-colors">
+              <ScrollLink 
+                to="services" 
+                smooth={true} 
+                duration={500} 
+                className="text-primary hover:text-secondary transition-colors cursor-pointer"
+              >
                 Services
-              </Link>
+              </ScrollLink>
               <Link to="/about" className="text-primary hover:text-secondary transition-colors">
                 About
               </Link>

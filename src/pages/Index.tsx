@@ -9,21 +9,21 @@ const services = [
     title: 'Premium Wash',
     description: 'Complete exterior wash with premium wax protection',
     image: 'https://images.unsplash.com/photo-1520340356584-f9917d1eea6f',
-    price: '$29.99'
+    price: 'Rs. 299.99'
   },
   {
     id: '2',
     title: 'Interior Detail',
     description: 'Deep cleaning of all interior surfaces',
     image: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785',
-    price: '$49.99'
+    price: 'Rs. 499.99'
   },
   {
     id: '3',
     title: 'Full Detail',
     description: 'Comprehensive interior and exterior detailing',
     image: 'https://images.unsplash.com/photo-1605618313023-d3640b8c121f',
-    price: '$89.99'
+    price: 'Rs. 899.99'
   }
 ];
 
