@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+
 
 const services = {
   '1': {
@@ -46,6 +47,12 @@ const services = {
 };
 
 const Service = () => {
+  const navigate = useNavigate();  // ✅ useNavigate inside component
+
+  const handleBooking = () => {
+    navigate(`/booking`);
+  };
+
   const { id } = useParams();
   const service = services[id as keyof typeof services];
 
@@ -95,7 +102,9 @@ const Service = () => {
                 ))}
               </ul>
 
-              <button className="w-full bg-secondary text-primary py-4 rounded-lg font-bold hover:bg-secondary/90 transition-colors">
+              <button 
+                className="w-full bg-secondary text-primary py-4 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
+                onClick={handleBooking}>
                 Book Now - {service.price}
               </button>
             </div>
