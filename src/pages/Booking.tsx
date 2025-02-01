@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast"
 import { MapPin, Navigation, Clock } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { getGaragesByPincode } from '../api/garage';
 
 interface Service {
   price: number;
@@ -21,7 +22,7 @@ interface Services {
 
 const Booking = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  //const { toast } = useToast();
   const [step, setStep] = useState(1);
   const [pincode, setPincode] = useState("");
   const [carType, setCarType] = useState("");
@@ -65,52 +66,130 @@ const Booking = () => {
     </div>
   );
 
-  const handleNext = () => {
-    if (step === 1 && !pincode) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid pincode",
-        variant: "destructive",
-      });
+  const handleNext = async () => {
+    console.log(step,pincode)
+    if (step === 1) {
+      if (!pincode) {
+        toast({
+          title: "Error",
+          description: "Please enter a valid pincode",
+          variant: "destructive"
+        });
+        return;
+      }
+  
+      // 🔹 Call fetchGarages before moving to Step 2
+      try {
+        const garages = await getGaragesByPincode(pincode);
+        console.log("Garages found:", garages);
+  
+        if (garages.length === 0) {
+          toast({
+            title: "No Garages Found",
+            description: "No garages available for this pincode. Try another.",
+            variant: "destructive",
+            /*className: "top-5 left-1/2 transform -translate-x-1/2 fixed z-50",*/
+          });
+          return;
+        }
+  
+        // Move to Step 2 if garages are found
+        setStep(2);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch garages. Please try again.",
+          variant: "destructive",
+          // className: "top-5 left-1/2 transform -translate-x-1/2 fixed z-50",
+        });
+      }
+  
       return;
     }
-
+  
     if (step === 2 && (!carType || !serviceType || !serviceLevel)) {
+      console.log("garage found but in step 2");
       toast({
         title: "Error",
         description: "Please select all required options",
         variant: "destructive",
+        // className: "top-5 left-1/2 transform -translate-x-1/2 fixed z-50",
       });
       return;
     }
-
+  
     if (step === 3 && (!date || !time)) {
       toast({
         title: "Error",
         description: "Please select both date and time",
         variant: "destructive",
+        // className: "top-5 left-1/2 transform -translate-x-1/2 fixed z-50",
       });
       return;
     }
-
+  
     if (step === 4) {
       if (!phone) {
         toast({
           title: "Error",
           description: "Please enter your phone number",
           variant: "destructive",
+          // className: "top-5 left-1/2 transform -translate-x-1/2 fixed z-50",
         });
         return;
       }
       toast({
         title: "Success",
         description: "Your booking has been confirmed!",
+        // className: "top-5 left-1/2 transform -translate-x-1/2 fixed z-50",
       });
       navigate("/");
       return;
     }
-
+  
     setStep(step + 1);
+  };
+  
+  const handleSearchGarages = async () => {
+    if (!pincode) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid pincode",
+        variant: "destructive",
+        // className: "top-5 left-1/2 transform -translate-x-1/2 fixed z-50",
+      });
+      return;
+    }
+  
+    try {
+      const garages = await getGaragesByPincode(pincode);
+      console.log("Garages found:", garages);
+  
+      if (garages.length === 0) {
+        toast({
+          title: "No Garages Found",
+          description: "No garages available for this pincode. Try another.",
+          variant: "destructive",
+          // className: "top-5 left-1/2 transform -translate-x-1/2 fixed z-50",
+        });
+        return;
+      }
+  
+      // Move to Step 2 ONLY if garages are found
+      setStep(2);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch garages. Please try again.",
+        variant: "destructive",
+        // className: "top-5 left-1/2 transform -translate-x-1/2 fixed z-50",
+      });
+    }
+  };
+  
+  const fetchGarages = async () => {
+    const pincode = "560001";
+    const garages = await getGaragesByPincode(pincode);
   };
 
   return (
@@ -128,12 +207,18 @@ const Booking = () => {
                   type="text"
                   placeholder="Enter suburb or postcode"
                   value={pincode}
-                  onChange={(e) => setPincode(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^\d{0,6}$/.test(value)) { // Only allow up to 6 digits
+                      setPincode(value);
+                    }
+                  }}
                   className="h-14 pl-12 text-lg"
+                  maxLength={6} 
                 />
                 <MapPin className="absolute left-4 top-4 text-gray-400" />
                 <Button 
-                  onClick={() => setStep(2)}
+                  onClick={handleSearchGarages}
                   className="absolute right-2 top-2 bg-red-600 hover:bg-red-700"
                 >
                   Search
@@ -237,6 +322,9 @@ const Booking = () => {
                     <Clock className="w-5 h-5" />
                     <h3 className="text-xl font-semibold">Select a Time</h3>
                   </div>
+                  <p className="text-sm text-gray-500 mt-4">
+                    Express Wash approx 25 mins/45 mins peak
+                  </p>
                   <Select value={time} onValueChange={setTime}>
                     <SelectTrigger className="w-full h-14 text-lg">
                       <SelectValue placeholder="Choose time slot" />
@@ -253,9 +341,7 @@ const Booking = () => {
                       ))}
                     </SelectContent>
                   </Select>
-                  <p className="text-sm text-gray-500 mt-4">
-                    Express Wash approx 25 mins/45 mins peak
-                  </p>
+                  
                 </div>
               </div>
             </div>
@@ -269,8 +355,15 @@ const Booking = () => {
                   type="tel"
                   placeholder="Enter Phone Number"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  //onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (/^\d{0,10}$/.test(value)) { 
+                      setPhone(e.target.value)}
+                    }
+                  }
                   className="h-14 text-lg"
+                  maxLength={10}
                 />
               </div>
             </div>
