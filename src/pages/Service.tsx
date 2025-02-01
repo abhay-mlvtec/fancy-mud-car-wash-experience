@@ -50,6 +50,7 @@ const Service = () => {
   const navigate = useNavigate();  // ✅ useNavigate inside component
 
   const handleBooking = () => {
+    console.log("booking clicked")
     navigate(`/booking`);
   };
 
